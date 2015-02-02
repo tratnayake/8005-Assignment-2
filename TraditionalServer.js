@@ -44,7 +44,9 @@ console.log(addresses);
 console.log("Server has been started on " + addresses[0] + " on port " +server.address().port+"...");
 
 server.on("connection",function(socket){
-	console.log("A client has connected from " + socket.address().address);
+	socket.UID = socket.remoteAddress+":"+socket.remotePort;
+	console.log("A client has connected from " + socket.UID);
+	
 	/*
 	*Check if the connecting socket is new. If so, add it to our array of clients. If it's not, don't do anything.
 	*/
@@ -62,9 +64,16 @@ server.on("connection",function(socket){
 				//console.log("NEW CLIENT!");
 				//brand new client
 				var client = new Object();
-				client.address = socket.address().address;
+				client.address = socket.UID;
 				client.records = new Array();
 				clients.push(client);
+
+				//assign remote address to ip property
+				
+				//******************//
+				socket.ip = socket.remoteAddress;
+
+
 				callback(null,"NEW CLIENT: added to array");
 			}
 			else{
@@ -111,8 +120,8 @@ server.on("connection",function(socket){
 	});
 
 	socket.on('close',function(data){
-		console.log("Client from " + socket.address() +" disconnected!");
-		console.log(socket);
+		console.log("Client from " + socket.UID +" disconnected!");
+		//console.log(socket);
 	})
 
 });
@@ -125,7 +134,7 @@ function checkIfNew(socket,callback){
 		callback(null,1);
 	}
 	for (var i = 0; i < clients.length; i++) {
-		if(clients[i].address == socket.address().address){
+		if(clients[i].address == socket.UID){
 			//Exists in array so an EXISTING CLIENT. 0 = NOT NEW
 			//console.log("Exists");
 			callback(null,0);
@@ -142,7 +151,7 @@ function checkIfNew(socket,callback){
 
 function getClientBySocket(socket,callback){
 	for (var i = 0; i < clients.length; i++) {
-		if(clients[i].address == socket.address().address){
+		if(clients[i].address == socket.UID){
 			callback(null,i);
 		}
 		else{
