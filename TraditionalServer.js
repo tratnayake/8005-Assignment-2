@@ -71,6 +71,7 @@ lastly
 
 server.on("connection",function(socket){
 	socket.UID = socket.remoteAddress+":"+socket.remotePort;
+	console.log("***************OPEN CONNECTION MESSSAGE *************");
 	console.log("A client has connected from " + socket.UID);
 	
 	/*
@@ -89,7 +90,7 @@ server.on("connection",function(socket){
 		//Handle based on whether they are a new client or not.
 		function(result,callback){
 			if(result == 1){
-				console.log("NEW CLIENT!");
+				//console.log("NEW CLIENT!");
 				//brand new client
 				var client = new Object();
 				client.address = socket.UID;
@@ -107,7 +108,7 @@ server.on("connection",function(socket){
 				//console.log(clients);
 			}
 			else{
-				console.log("EXISTING CLIENT!");
+				//console.log("EXISTING CLIENT!");
 				callback(null,"EXISTING CLIENT: nothing added to array!");
 
 			}
@@ -121,7 +122,17 @@ server.on("connection",function(socket){
 		}
 	],function(err,msg,numSvrConnections){
 		console.log(msg);
-		console.log("Number of clients in array= "+clients.length+"\n Number of connections registered with server= "+numSvrConnections);
+		getClientByUID(socket.UID,function(err,clientid){
+			if(err) return console.log(err);
+			var cID = clientid;
+			console.log("CID is "+clientid);
+			setClientDisconnected(clientid,function(err,clientid){
+				getConnectionsStatus(function(err){
+					console.log("*************** END OPEN CONNECTION MESSSAGE ************* \n\n");
+				});
+				
+			})
+		})
 	})
 
 
@@ -154,13 +165,17 @@ server.on("connection",function(socket){
 	});
 
 	socket.on('close',function(data){
+		console.log("***************CLOSE CONNECTION MESSSAGE *************");
 		console.log("Client from " + socket.UID +" disconnected!");
 		getClientByUID(socket.UID,function(err,clientid){
 			if(err) return console.log(err);
 			var cID = clientid;
 			console.log("CID is "+clientid);
 			setClientDisconnected(clientid,function(err,clientid){
-				getConnectionsStatus();
+				getConnectionsStatus(function(err){
+					console.log("***************END CLOSE CONNECTION MESSSAGE *************");
+				});
+				
 			})
 		})
 		//console.log(socket);
@@ -220,6 +235,7 @@ function getConnectionsStatus(callback){
 	server.getConnections(function(err,numSvrConnections){
 		console.log("STACK DEFINED FN "+numSvrConnections+"ACTIVE CONNECTIONS");
 		console.log("TOTAL CONNECTIONS EVER "+clients.length);
+		callback(null);
 	})
 }
 
