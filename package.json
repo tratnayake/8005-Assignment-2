@@ -1,12 +1,12 @@
 {
-  "name": "module-name",
-  "version": "10.3.1",
-  "description": "COMP 8005 Assignment 02 @ BCIT.",
-  "author": "Thilina Ratnayake <thilina.ratnayake1@gmail.com> (http://www.tratnayake.me/)",
-  "contributors": [{
-  "name": "Elton Sia",
-  "email": "foo.bar@example.com"
-}],
-  "dependencies": {
-    "epoll": "0.0.11"
+
+  "name": "8005Assignment2",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
   },
+  "dependencies": {
+    "epoll":"0.1.11",
+    "async":"0.9.0"
+  }
+}
