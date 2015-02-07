@@ -47,8 +47,9 @@ end
 
 ##############################MAIN AREA#########################
 
-
-server = TCPServer.new(8000)
+#1. Create first socket
+server = TCPServer.new(8001)
+connSockets = Array.new
 
 #Call google to find out what the local IP is
 ip = UDPSocket.open {|s| s.connect("64.233.187.99", 1); s.addr.last}
@@ -56,39 +57,52 @@ port = server.addr[1].to_s
 
 
 puts "Ready to receive on "+ ip +":" + port
+connSockets.push(server);
 
-while (connection = server.accept)
-  #When the server accepts a connection, spawn a new thread to handle it
-  Thread.new(connection) do |conn|
 
-    #Declare who connected, and increment counters
-    connectionStart(conn)
- 
-    #While the client is connected, do this
-   while true do
-      #Add this socket to select to be monitored by kernel 
-      connections = IO.select([conn])
-      #ready will contain any connections that are ready to be read
-      ready = connections[0]
-      #for each connection in ready
-      ready.each do |socketVar| 
-        #have a buffer that reads 80 bytes in a non blocking manner (??)
+#2. Call listen on that socket
+server.listen(1000000);
+
+
+#3. block on that socket
+while true
+  selectVars = IO.select(connSockets)
+  #IMPORTANT POINT , connSockets is a dynamic array that can be changing. 
+  #so when a new connection happens, it can be added to elsewhere
+
+  #4. Inside select, check if it was triggered for data packets or a new connection
+  puts selectVars[0].size
+  puts selectVars[0]
+  selectVars[0].each do |socketVar|
+    if socketVar == connSockets[0]
+      puts "Triggered by server"
+      #2A: The server socket only becomes active if its a new connection
+      #so add the dude to the array
+      connSockets.push(server.accept)
+     else
+        puts "Triggered by new connection so probably a message"
         buf = socketVar.recv_nonblock(80)
         #If a socket becomes active but the length is 0, that means client has Disconnected 
         if (buf.length)==0
-         #declare client disconnect and decrement counters
-         connectionEnd(conn)
-         #Kill the current thread as it is no longer to handle the client it started with
-         Thread.kill(conn)
+        #declare client disconnect and decrement counters
+        connectionEnd(socketVar)
         #Anything else that has a length greater than 0 means a message, so echo it back 
         else
-          socketVar.puts(buf)
+        socketVar.puts(buf)
         end
-      end
-    end
+     end 
   end
-
 end
+
+
+
+
+
+
+
+
+
+
 
 
 
