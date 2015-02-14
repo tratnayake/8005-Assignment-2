@@ -35,7 +35,7 @@ end
 #----------------------------------------------------------------------------------------------------------------------
 
 def connectionEnd(conn)
-   port, host = socketVar.peeraddr[1,2]
+   port, host = conn.peeraddr[1,2]
    client = "#{host}:#{port}"
    puts "#{client} has disconnected"
    $counter=$counter -1
@@ -48,7 +48,7 @@ end
 ##############################MAIN AREA#########################
 
 #1. Create first socket
-server = TCPServer.new(8001)
+server = TCPServer.new(9000)
 connSockets = Array.new
 
 #Call google to find out what the local IP is
@@ -71,21 +71,29 @@ while true
   #so when a new connection happens, it can be added to elsewhere
 
   #4. Inside select, check if it was triggered for data packets or a new connection
-  puts selectVars[0].size
-  puts selectVars[0]
+  #puts selectVars[0].size
+  #puts selectVars[0]
   selectVars[0].each do |socketVar|
     if socketVar == connSockets[0]
-      puts "Triggered by server"
+      #puts "Triggered by server"
       #2A: The server socket only becomes active if its a new connection
       #so add the dude to the array
-      connSockets.push(server.accept)
+      newSocket = server.accept;
+      connSockets.push(newSocket)
+      connectionStart(newSocket);
      else
-        puts "Triggered by new connection so probably a message"
+        #puts "Triggered by new connection so probably a message"
         buf = socketVar.recv_nonblock(80)
         #If a socket becomes active but the length is 0, that means client has Disconnected 
         if (buf.length)==0
         #declare client disconnect and decrement counters
-        connectionEnd(socketVar)
+          #connectionEnd(socketVar)
+
+          #puts "Client disconnected"
+          connectionEnd(socketVar)
+          connSockets.delete_if{|socket| socket == socketVar}
+          #puts "Deleted from array"
+          break
         #Anything else that has a length greater than 0 means a message, so echo it back 
         else
         socketVar.puts(buf)
