@@ -6,6 +6,7 @@ client = gets.chomp.to_i
 puts "What is the maximum number of messages you want the client to send?"
 puts "Note: the number of messages will always be a random number between 0 and the number you chose"
 maxcounter = gets.chomp.to_i
+
 counter = 0
 serveraddress = "192.168.38.146"
 port = 9000
@@ -24,16 +25,19 @@ client.times do |t|
 		(1..msgcounter).each do |i|
 			counter = counter + 1
 			#Send a string to the server
-			socket.puts "Hello " + counter.to_s
+			socket.puts "Hello #{counter}"
 			line = socket.gets
 			puts line
+			sleep(0.3)
 		end
 		#End timer
 		timeend = Time.now.to_f
+		#Calculate the time it took to send and receive the message
 		seconds = timeend - timestart
 		puts seconds
+		#Put the thread to sleep so that it does not close the connection
 		sleep
 	end
-end
 
+end
 threads.each { |th| th.join }
