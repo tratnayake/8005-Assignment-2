@@ -25,7 +25,10 @@ client.times do |t|
 		(1..msgcounter).each do |i|
 			counter = counter + 1
 			#Send a string to the server
-			socket.puts "Hello #{counter}"
+			msg = "Hello #{counter}"
+			puts msg
+			puts counter
+			socket.puts msg
 			line = socket.gets
 			puts line
 			sleep(0.3)
