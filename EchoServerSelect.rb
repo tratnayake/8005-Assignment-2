@@ -48,7 +48,7 @@ end
 ##############################MAIN AREA#########################
 
 #1. Create first socket
-server = TCPServer.new(9000)
+server = TCPServer.new(8000)
 connSockets = Array.new
 
 #Call google to find out what the local IP is
