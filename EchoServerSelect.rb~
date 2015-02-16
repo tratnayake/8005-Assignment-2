@@ -18,7 +18,7 @@ def connectionStart(conn)
 
  port, host = conn.peeraddr[1,2]
  client = "#{host}:#{port}"
- puts "#{client} is connected"
+ #puts "#{client} is connected"
  $counter=$counter + 1
  $maxConnections = $maxConnections + 1
  puts $counter.to_s+" clients connected"
@@ -97,7 +97,7 @@ while true
         #Anything else that has a length greater than 0 means a message, so echo it 		back 
         else
         data = socketVar.gets
-	puts data.chomp.size
+	#puts data.chomp.size
 	socketVar.puts(data)
 	
         end

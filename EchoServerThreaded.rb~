@@ -23,7 +23,7 @@ while (connection = server.accept)
       loop do
         line = conn.readline
         #puts "#{client} says: #{line}"
-	puts line.chomp.size
+	#puts line.chomp.size
         conn.puts(line)
       end
     rescue EOFError

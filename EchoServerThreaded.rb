@@ -1,5 +1,5 @@
 require 'socket'
-server = TCPServer.new(8012)
+server = TCPServer.new(8013)
 
 
  ip = UDPSocket.open {|s| s.connect("64.233.187.99", 1); s.addr.last}
@@ -23,7 +23,7 @@ while (connection = server.accept)
       loop do
         line = conn.readline
         #puts "#{client} says: #{line}"
-	puts line.chomp.size
+	#puts line.chomp.size
         conn.puts(line)
       end
     rescue EOFError

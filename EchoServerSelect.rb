@@ -18,7 +18,7 @@ def connectionStart(conn)
 
  port, host = conn.peeraddr[1,2]
  client = "#{host}:#{port}"
- puts "#{client} is connected"
+ #puts "#{client} is connected"
  $counter=$counter + 1
  $maxConnections = $maxConnections + 1
  puts $counter.to_s+" clients connected"
@@ -48,7 +48,7 @@ end
 ##############################MAIN AREA#########################
 
 #1. Create first socket
-server = TCPServer.new(8011)
+server = TCPServer.new(8500)
 connSockets = Array.new
 
 #Call google to find out what the local IP is
@@ -97,7 +97,6 @@ while true
         #Anything else that has a length greater than 0 means a message, so echo it 		back 
         else
         data = socketVar.gets
-	puts data.chomp.size
 	socketVar.puts(data)
 	
         end
