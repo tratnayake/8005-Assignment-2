@@ -1,8 +1,11 @@
 require 'socket'
+require 'logger'
 
 $counter = 0
 $maxConnections = 0
 
+$file = File.open('./logfiles/Select.log','w')
+$logger = Logger.new($file)
 
 #------------------------------------------------------------------------------------------------------------------
 #-- FUNCTION: connectionStart
@@ -22,7 +25,8 @@ def connectionStart(conn)
  $counter=$counter + 1
  $maxConnections = $maxConnections + 1
  puts $counter.to_s+" clients connected"
-
+ $logger.info "#{client} has connected"
+ $logger.info $counter.to_s+" clients connected"
 end
 
 #------------------------------------------------------------------------------------------------------------------
@@ -40,6 +44,8 @@ def connectionEnd(conn)
    puts "#{client} has disconnected"
    $counter=$counter -1
    puts $counter.to_s+" clients connected"
+   $logger.info "#{client} has connected"
+   $logger.info $counter.to_s+" clients connected"
 
 end 
 
@@ -55,7 +61,7 @@ connSockets = Array.new
 ip = UDPSocket.open {|s| s.connect("64.233.187.99", 1); s.addr.last}
 port = server.addr[1].to_s
 
-
+$logger.info "Server started"
 puts "Ready to receive on "+ ip +":" + port
 connSockets.push(server);
 

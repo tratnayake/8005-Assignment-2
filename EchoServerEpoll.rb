@@ -1,17 +1,28 @@
 require 'rubygems'
 require 'eventmachine'
+require 'logger'
+
+$file = File.open('./logfiles/Epoll.log','w')
+$logger = Logger.new($file)
 
 host = UDPSocket.open {|s| s.connect("64.233.187.99", 1); s.addr.last}
 port = 9000
 
 module EchoServer
+
+
+
+
   $counter = 0
   def post_init
     port, ip = Socket.unpack_sockaddr_in(get_peername)
     client = "#{ip}:#{port}"
-    #puts "#{client} is connected"
+    puts "#{client} has connected"
+    $logger.info "#{client} has connected"
+
     $counter += 1
     puts $counter.to_s + " clients connected"
+    $logger.info $counter.to_s + "clients connected"
   end
 
   def receive_data data
@@ -21,8 +32,10 @@ module EchoServer
 
   def unbind 
     puts "client disconnected"
+    $logger.info "client disconnected"
     $counter -= 1
     puts $counter.to_s + " clients connected"
+    $logger.info $counter.to_s + " clients connected"
   
   end
 
@@ -41,4 +54,5 @@ end
 EM.run {
   EM.start_server host, port, EchoServer
   puts "Listening for clients on #{host}:#{port}"
+  $logger.info "Server started"
 }

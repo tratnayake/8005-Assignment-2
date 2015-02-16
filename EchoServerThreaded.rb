@@ -1,5 +1,9 @@
 require 'socket'
-server = TCPServer.new(8013)
+require 'logger'
+$file = File.open('./logfiles/Threaded.log','w')
+$logger = Logger.new($file)
+
+server = TCPServer.new(9003)
 
 
  ip = UDPSocket.open {|s| s.connect("64.233.187.99", 1); s.addr.last}
@@ -19,6 +23,9 @@ while (connection = server.accept)
     puts "#{client} is connected"
     $counter=$counter + 1
     puts $counter.to_s+" clients connected"
+    $logger.info "#{client} has connected"
+    $logger.info $counter.to_s+" clients connected"
+
     begin
       loop do
         line = conn.readline
@@ -32,6 +39,8 @@ while (connection = server.accept)
     
       puts "#{client} has disconnected"
         puts $counter.to_s+" clients connected"
+        $logger.info "#{client} has disconnected"
+        $logger.info $counter.to_s+" clients connected"
     end
   end
 end
