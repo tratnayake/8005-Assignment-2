@@ -32,7 +32,7 @@ while i < client
 			#Send a string to the server
 			msg = "Hello #{counter}"
 			puts msg
-			puts socket
+			puts counter
 			counter.puts msg
 			line = socket.gets
 			puts line
