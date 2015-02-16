@@ -4,7 +4,6 @@ require 'eventmachine'
 host = UDPSocket.open {|s| s.connect("64.233.187.99", 1); s.addr.last}
 port = 9000
 
-
 module EchoServer
   $counter = 0
   def post_init
@@ -16,7 +15,6 @@ module EchoServer
   end
 
   def receive_data data
-	
     send_data "#{data}"
     #puts "#{data.chomp}"
   end
