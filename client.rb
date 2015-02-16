@@ -4,21 +4,21 @@ require 'thwait'
 require 'logger'
 
 puts "How many clients would you like to connect?"
-client = gets.chomp.to_i
+$client = gets.chomp.to_i
 
 puts "What is the maximum number of messages you want the client to send?"
 puts "Note: the number of messages will always be a random number between 0 and the number you chose"
 maxcounter = gets.chomp.to_i
 
-i = 0
+$i = 0
 counter = 0
 serveraddress = "192.168.38.146"
 port = 9000
 
 threads = []
 
-while i < client
-	i += 1
+while $i < $client
+	puts $i += 1
 	#New threads are created
 	threads = Thread.fork() do
 		#Sets the random number generator between 0 and the number the user chose
@@ -32,8 +32,7 @@ while i < client
 			#Send a string to the server
 			msg = "Hello #{counter}"
 			puts msg
-			puts counter
-			counter.puts msg
+			socket.puts msg
 			line = socket.gets
 			puts line
 			sleep(0.3)
@@ -46,5 +45,7 @@ while i < client
 		#Put the thread to sleep so that it does not close the connection
 		sleep
 	end
+	sleep(0.005)
 end
-ThreadsWait.all_waits(*threads)
+STDIN.gets
+threads.join
