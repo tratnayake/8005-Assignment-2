@@ -3,6 +3,12 @@ require 'thread'
 require 'thwait'
 require 'logger'
 
+$logger = Logger.new('./logfiles/Client.log','w')
+
+logger.formatter = proc do | severity, datetime, progname, msg |
+	"#{datatime}: #{msg}\n"
+end
+
 puts "How many clients would you like to connect?"
 $client = gets.chomp.to_i
 
@@ -29,6 +35,7 @@ while $i < $client
 		#Allow each clients to send different amounts of messages	
 		(1..msgcounter).each do |i|
 			counter = counter + 1
+			logger.info("Client #{counter}")
 			#Send a string to the server
 			msg = "Hello #{counter}"
 			puts msg
@@ -41,7 +48,7 @@ while $i < $client
 		timeend = Time.now.to_f
 		#Calculate the time it took to send and receive the message
 		seconds = timeend - timestart
-		puts seconds
+		logger.info("Seconds: #{seconds}")
 		#Put the thread to sleep so that it does not close the connection
 		sleep
 	end

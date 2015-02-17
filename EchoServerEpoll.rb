@@ -9,10 +9,6 @@ host = UDPSocket.open {|s| s.connect("64.233.187.99", 1); s.addr.last}
 port = 9000
 
 module EchoServer
-
-
-
-
   $counter = 0
   def post_init
     port, ip = Socket.unpack_sockaddr_in(get_peername)
