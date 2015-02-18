@@ -31,7 +31,7 @@ while $i < $client
 		socket = TCPSocket.open(serveraddress, port)
 		#Start timer
 		timestart = Time.now.to_f
-		#	
+		#
 		msgcounter.times do
 			counter = counter + 1
 			#Send a string to the server
@@ -45,7 +45,7 @@ while $i < $client
 		timeend = Time.now.to_f
 		#Calculate the time it took to send and receive the message
 		seconds = timeend - timestart
-		$logger.info "Finished #{$i}, #{seconds}"
+		$logger.info "Finished #{counter}, #{seconds}"
 		#Put the thread to sleep so that it does not close the connection
 		sleep
 	end
