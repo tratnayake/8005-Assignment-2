@@ -10,7 +10,6 @@ puts "How many clients would you like to connect?"
 $client = gets.chomp.to_i
 
 puts "What is the maximum number of messages you want the client to send?"
-puts "Note: the number of messages will always be a random number between 0 and the number you chose"
 msgcounter = gets.chomp.to_i
 
 puts "What port are you going to be using"
@@ -22,6 +21,8 @@ serveraddress = "192.168.0.14"
 
 threads = []
 
+STDOUT.sync = true
+
 while $i < $client
 	$i = $i + 1
 	puts $i
@@ -31,11 +32,10 @@ while $i < $client
 		#Start timer
 		timestart = Time.now.to_f
 		#	
-		(1..msgcounter).each do |i|
+		msgcounter.times do
 			counter = counter + 1
 			#Send a string to the server
 			msg = "helloworld"
-
 			puts msg
 			socket.puts msg
 			line = socket.gets
