@@ -23,8 +23,7 @@ serveraddress = "192.168.0.14"
 threads = []
 
 while $i < $client
-	$i = $i + 1
-	puts $i
+
 	#New threads are created
 	threads = Thread.fork() do
 		socket = TCPSocket.open(serveraddress, port)
@@ -46,6 +45,8 @@ while $i < $client
 		#Calculate the time it took to send and receive the message
 		seconds = timeend - timestart
 		$logger.info "Finished #{$i}, #{seconds}"
+		$i = $i + 1
+		puts $i
 		#Put the thread to sleep so that it does not close the connection
 		sleep
 	end
