@@ -35,6 +35,7 @@ while $i < $client
 			counter = counter + 1
 			#Send a string to the server
 			msg = "helloworld"
+
 			puts msg
 			socket.puts msg
 			line = socket.gets
@@ -45,7 +46,8 @@ while $i < $client
 		timeend = Time.now.to_f
 		#Calculate the time it took to send and receive the message
 		seconds = timeend - timestart
-		$logger.info "Finished " + $i.to_s + ", #{seconds}"
+		puts $i
+		$logger.info "Finished #{$i}, #{seconds}"
 		#Put the thread to sleep so that it does not close the connection
 		sleep
 	end
