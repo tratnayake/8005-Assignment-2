@@ -45,7 +45,7 @@ while $i < $client
 		timeend = Time.now.to_f
 		#Calculate the time it took to send and receive the message
 		seconds = timeend - timestart
-		$logger.info "Finished $i, #{seconds}"
+		$logger.info "Finished " + $i.to_s + ", #{seconds}"
 		#Put the thread to sleep so that it does not close the connection
 		sleep
 	end
