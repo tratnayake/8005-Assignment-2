@@ -29,11 +29,12 @@ while $i < $client
 	#New threads are created
 	threads = Thread.fork() do
 		socket = TCPSocket.open(serveraddress, port)
+		counter = counter + 1
 		#Start timer
 		timestart = Time.now.to_f
 		#
 		msgcounter.times do
-			counter = counter + 1
+			
 			#Send a string to the server
 			msg = "helloworld"
 			puts msg
@@ -49,7 +50,6 @@ while $i < $client
 		#Put the thread to sleep so that it does not close the connection
 		sleep
 	end
-	sleep(0.005)
 end
 STDIN.gets
 threads.join
