@@ -5,8 +5,9 @@ $logger = Logger.new($file)
 
 server = TCPServer.new(9003)
 
+connection []
 
- ip = UDPSocket.open {|s| s.connect("64.233.187.99", 1); s.addr.last}
+ip = UDPSocket.open {|s| s.connect("64.233.187.99", 1); s.addr.last}
 port = server.addr[1].to_s
 
 
@@ -16,9 +17,10 @@ $counter = 0
 
 
 
-while (connection = server.accept)
-  Thread.new(connection) do |conn|
-    port, host = conn.peeraddr[1,2]
+while 1
+    Thread.fork(server.accept) do |client|
+    connections.push(client)
+    puts connection.length
     client = "#{host}:#{port}"
     puts "#{client} is connected"
     $counter=$counter + 1
@@ -28,13 +30,13 @@ while (connection = server.accept)
 
     begin
       loop do
-        line = conn.readline
+        line = client.readline
         #puts "#{client} says: #{line}"
 	#puts line.chomp.size
-        conn.puts(line)
+        client.puts(line)
       end
     rescue EOFError
-      conn.close
+      client.close
       $counter=$counter - 1
     
       puts "#{client} has disconnected"
