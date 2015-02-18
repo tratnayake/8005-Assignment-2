@@ -29,7 +29,6 @@ while $i < $client
 	#New threads are created
 	threads = Thread.fork() do
 		socket = TCPSocket.open(serveraddress, port)
-		counter = counter + 1
 		#Start timer
 		timestart = Time.now.to_f
 			msgcounter.times do
@@ -44,7 +43,7 @@ while $i < $client
 		timeend = Time.now.to_f
 		#Calculate the time it took to send and receive the message
 		seconds = timeend - timestart
-		puts "Time is #{seconds}, Couner is #{counter},I is #{$i}"
+		counter = counter + 1
 		$logger.info "Finished #{counter}, #{seconds}"
 		#Put the thread to sleep so that it does not close the connection
 		sleep
