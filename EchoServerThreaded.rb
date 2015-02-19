@@ -1,12 +1,15 @@
 require 'socket'
 require 'logger'
+
+$PORT=6000
+
 $file = File.open('./logfiles/Threaded.log','w')
 $logger = Logger.new($file)
 
-server = TCPServer.new(9003)
+server = TCPServer.new($PORT)
 
 
-ip = UDPSocket.open {|s| s.connect("64.233.187.99", 1); s.addr.last}
+ ip = UDPSocket.open {|s| s.connect("64.233.187.99", 1); s.addr.last}
 port = server.addr[1].to_s
 
 
@@ -28,14 +31,15 @@ while (connection = server.accept)
 
     begin
       loop do
-        line = conn.readline
-        conn.puts(line)
+        data = conn.read(2048)
+              conn.write(data)
+              conn.flush
       end
     rescue EOFError
       conn.close
       $counter=$counter - 1
     
-      puts "#{client} has disconnected"
+        puts "#{client} has disconnected"
         puts $counter.to_s+" clients connected"
         $logger.info "#{client} has disconnected"
         $logger.info $counter.to_s+" clients connected"
