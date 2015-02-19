@@ -86,7 +86,7 @@ t1 = Thread.new{
       #puts "Triggered by server"
       #2A: The server socket only becomes active if its a new connection
       #so add the dude to the array
-      newSocket = server.accept;
+      newSocket = server.accept_nonblock;
       connSockets.push(newSocket)
       connectionStart(newSocket);
      
@@ -108,54 +108,29 @@ t2 = Thread.new{
       #4. Inside select, check if it was triggered for data packets or a new connection
 
       selectVars[0].each do |socketVar|
-        if socketVar != connSockets[0]
-         
-          if !socketVar.eof?
-            data = socketVar.gets
-            #puts data
-             socketVar.puts(data)
-
-            end
-         end 
-         
-       end
-   end
-
-}
-
-t3 = Thread.new{
-
-  while 1 do 
-
-  selectVars = IO.select(connSockets)
-
-  selectVars[0].each do |socketVar|
-    if socketVar != connSockets[0]
-     
-     if socketVar.eof?
-        #declare client disconnect and decrement counters
-          #connectionEnd(socketVar)
-
-          #puts "Client disconnected"
-          connectionEnd(socketVar)
-          connSockets.delete_if{|socket| socket == socketVar}
-          #puts "Deleted from array"
-          break
-        #Anything else that has a length greater than 0 means a message, so echo it     back 
-      
-     end 
-     
-   end
-
-  end
-
-end
+        if socketVar != connSockets[0]  
+            if socketVar.eof
+              connectionEnd(socketVar)
+              connSockets.delete_if{|socket| socket == socketVar}
+              #puts "Deleted from array"
+              break
+             
+            
+            else
+              data = socketVar.read(1024)
+              socketVar.write(data)
+              socketVar.flush
+            end #end for if
+        end  #end for if 
+      end #and for do
+   end #end for while
 
 }
+
 
 t1.join
 t2.join
-t3.join
+
 
 puts "End of thread"
 
