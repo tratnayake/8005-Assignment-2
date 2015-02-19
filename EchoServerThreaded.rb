@@ -5,8 +5,7 @@ $logger = Logger.new($file)
 
 server = TCPServer.new(9003)
 
-connection = []
-mutex = Mutex.new
+
 ip = UDPSocket.open {|s| s.connect("64.233.187.99", 1); s.addr.last}
 port = server.addr[1].to_s
 
@@ -14,32 +13,32 @@ port = server.addr[1].to_s
 puts "Ready to receive on "+ ip +":" + port
 
 $counter = 0
-$highestnumber
 
-while 1
-    Thread.fork(server.accept) do |client|
-    connection.push(client)
+
+
+while (connection = server.accept)
+  Thread.new(connection) do |conn|
     port, host = conn.peeraddr[1,2]
     client = "#{host}:#{port}"
-    $counter += 1
+    puts "#{client} is connected"
+    $counter=$counter + 1
+    puts $counter.to_s+" clients connected"
+    $logger.info "#{client} has connected"
+    $logger.info $counter.to_s+" clients connected"
 
-      if $counter > $highestnumber then
-         $highestnumber = $counter
-         puts "#{highestnumber} clients connected"
-      end
-
+    begin
       loop do
-        line = client.readline
-        client.puts(line)
-
-          if client.eof?
-             mutex.synchronize do
-              client.close
-              connection.delete(client)
-              puts "#{highestnumber} clients connected"
-            end
-            break
-          end
+        line = conn.readline
+        conn.puts(line)
       end
+    rescue EOFError
+      conn.close
+      $counter=$counter - 1
+    
+      puts "#{client} has disconnected"
+        puts $counter.to_s+" clients connected"
+        $logger.info "#{client} has disconnected"
+        $logger.info $counter.to_s+" clients connected"
     end
+  end
 end
