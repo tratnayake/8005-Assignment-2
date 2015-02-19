@@ -5,7 +5,7 @@ $logger = Logger.new($file)
 
 server = TCPServer.new(9003)
 
-connection []
+connection = []
 
 ip = UDPSocket.open {|s| s.connect("64.233.187.99", 1); s.addr.last}
 port = server.addr[1].to_s
