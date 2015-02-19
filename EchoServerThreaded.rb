@@ -19,13 +19,12 @@ $counter = 0
 
 while 1
     Thread.fork(server.accept) do |client|
-    connections.push(client)
-    puts connection.length
+    connection.push(client)
     client = "#{host}:#{port}"
-    puts "#{client} is connected"
+    puts "#{connection.length} is connected"
     $counter=$counter + 1
     puts $counter.to_s+" clients connected"
-    $logger.info "#{client} has connected"
+    $logger.info "#{connection.length} has connected"
     $logger.info $counter.to_s+" clients connected"
 
     begin
@@ -39,9 +38,9 @@ while 1
       client.close
       $counter=$counter - 1
     
-      puts "#{client} has disconnected"
+      puts "#{connection.length} has disconnected"
         puts $counter.to_s+" clients connected"
-        $logger.info "#{client} has disconnected"
+        $logger.info "#{connection.length} has disconnected"
         $logger.info $counter.to_s+" clients connected"
     end
   end
