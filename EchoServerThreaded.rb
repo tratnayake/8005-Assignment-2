@@ -42,4 +42,3 @@ while (connection = server.accept)
     end
   end
 end
-Thread.join

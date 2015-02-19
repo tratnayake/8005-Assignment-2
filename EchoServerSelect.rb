@@ -1,6 +1,8 @@
 require 'socket'
 require 'logger'
 
+$PORT = 8501
+
 $counter = 0
 $maxConnections = 0
 
@@ -54,7 +56,7 @@ end
 ##############################MAIN AREA#########################
 
 #1. Create first socket
-server = TCPServer.new(8500)
+server = TCPServer.new($PORT)
 connSockets = Array.new
 
 #Call google to find out what the local IP is
@@ -63,15 +65,15 @@ port = server.addr[1].to_s
 
 $logger.info "Server started"
 puts "Ready to receive on "+ ip +":" + port
-connSockets.push(server);
+connSockets.push(server)
 
+#Make two threads, one that handles new connections, and the other that handles existing messages
+t1 = Thread.new{
+  #puts "Server thread started..."
+  while 1 do
 
-#2. Call listen on that socket
-server.listen(1000000);
+    #This is the server thread. It listens for server connections
 
-
-#3. block on that socket
-while true
   selectVars = IO.select(connSockets)
   #IMPORTANT POINT , connSockets is a dynamic array that can be changing. 
   #so when a new connection happens, it can be added to elsewhere
@@ -87,11 +89,50 @@ while true
       newSocket = server.accept;
       connSockets.push(newSocket)
       connectionStart(newSocket);
-     else
-        #puts "Triggered by new connection so probably a message"
-        
-        #If a socket becomes active but the length is 0, that means client has Disconnected 
-        if socketVar.eof?
+     
+   end
+
+ end
+
+end
+}
+
+t2 = Thread.new{
+
+  while 1 do
+
+    selectVars = IO.select(connSockets)
+      #IMPORTANT POINT , connSockets is a dynamic array that can be changing. 
+      #so when a new connection happens, it can be added to elsewhere
+
+      #4. Inside select, check if it was triggered for data packets or a new connection
+
+      selectVars[0].each do |socketVar|
+        if socketVar != connSockets[0]
+         
+          if !socketVar.eof?
+            data = socketVar.gets
+            #puts data
+             socketVar.puts(data)
+
+            end
+         end 
+         
+       end
+   end
+
+}
+
+t3 = Thread.new{
+
+  while 1 do 
+
+  selectVars = IO.select(connSockets)
+
+  selectVars[0].each do |socketVar|
+    if socketVar != connSockets[0]
+     
+     if socketVar.eof?
         #declare client disconnect and decrement counters
           #connectionEnd(socketVar)
 
@@ -100,12 +141,29 @@ while true
           connSockets.delete_if{|socket| socket == socketVar}
           #puts "Deleted from array"
           break
-        #Anything else that has a length greater than 0 means a message, so echo it 		back 
-        else
-        data = socketVar.gets
-	socketVar.puts(data)
-	
-        end
+        #Anything else that has a length greater than 0 means a message, so echo it     back 
+      
      end 
+     
+   end
+
   end
+
 end
+
+}
+
+t1.join
+t2.join
+t3.join
+
+puts "End of thread"
+
+
+
+puts "Thread1"
+
+
+
+
+ 
