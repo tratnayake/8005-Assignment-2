@@ -104,8 +104,9 @@ server.listen(1000000);
 		
 			#If a socket becomes active but the length is 0, that means client has 		Disconnected 
 		
-			data = socketVar.gets
-			socketVar.write(data)
+			data = socketVar.read(256)
+            socketVar.write(data)
+            socketVar.flush
 		    
 		
 		     end 

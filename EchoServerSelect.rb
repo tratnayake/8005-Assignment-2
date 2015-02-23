@@ -114,8 +114,6 @@ t2 = Thread.new{
               connSockets.delete_if{|socket| socket == socketVar}
               #puts "Deleted from array"
               break
-             
-            
             else
               data = socketVar.read(1024)
               socketVar.write(data)

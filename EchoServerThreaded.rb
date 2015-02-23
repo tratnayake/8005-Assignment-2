@@ -39,10 +39,10 @@ while (connection = server.accept)
     puts "#{client} is connected"
     #Increment the counter
     $counter=$counter + 1
-    puts $counter.to_s+" clients connected"
+    puts $counter.to_s + " clients connected"
     #Log pertinent information
     $logger.info "#{client} has connected"
-    $logger.info $counter.to_s+" clients connected"
+    $logger.info $counter.to_s + " clients connected"
 
   #While the client is connected...
     begin
@@ -59,11 +59,11 @@ while (connection = server.accept)
      #Close the connection
       conn.close
       #Decrement counter
-      $counter=$counter - 1
+      $counter = $counter - 1
         puts "#{client} has disconnected"
-        puts $counter.to_s+" clients connected"
+        puts $counter.to_s + " clients connected"
         $logger.info "#{client} has disconnected"
-        $logger.info $counter.to_s+" clients connected"
+        $logger.info $counter.to_s + " clients connected"
     end
   end
 end
