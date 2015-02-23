@@ -103,8 +103,8 @@ end
 
 t2 = Thread.new{
 
-  while 1 do
-
+  while true
+	begin
     selectVars = IO.select(connSockets)
       #IMPORTANT POINT , connSockets is a dynamic array that can be changing. 
       #so when a new connection happens, it can be added to elsewhere
@@ -124,6 +124,12 @@ t2 = Thread.new{
               socketVar.flush
             end #end for if
         end  #end for if 
+
+	end
+	rescue Errno::ECONNRESET => e
+	puts "Client disconnected"
+	$counter -= 1
+	puts "#{$counter} clients connected"
       end #and for do
    end #end for while
 
