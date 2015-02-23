@@ -1,11 +1,13 @@
 #------------------------------------------------------------------------------------------------------------------
-#-- PROGRAM: Single-Threaded Select Server
-#
+#-- PROGRAM: Multi-Threaded Echo Server
 #--
-#-- NOTES:
-#-- This function notifies that a client has connected (along with its IP and port) and then adds to the total clients connected counter
+#-- Authors: Elton Sia (A00800541) & Thilina Ratnayake (A00802338) 
+#--
+#-- Description:
+#-- This program is a single-threaded echo server that uses the select call to block and listen until sockets becomea active. 
+#
+#-- Command Line Arguments: NONE
 #----------------------------------------------------------------------------------------------------------------------
-
 require 'socket'
 require 'logger'
 
