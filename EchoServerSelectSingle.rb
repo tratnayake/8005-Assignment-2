@@ -77,7 +77,7 @@ connSockets.push(server);
 
 
 #2. Call listen on that socket
-server.listen(1000000);
+server.listen(1000);
 
 
 	#3. block on that socket
