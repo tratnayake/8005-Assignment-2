@@ -1,7 +1,7 @@
 require 'socket'
 require 'logger'
 
-$PORT = 8501
+$PORT = 8500
 
 $counter = 0
 $maxConnections = 0
@@ -54,6 +54,12 @@ end
 
 
 ##############################MAIN AREA#########################
+
+puts "What port do you want to listen on?"
+$PORT = gets.to_i
+
+puts "What is your Data size?"
+$DataSize = gets.to_i
 
 #1. Create first socket
 server = TCPServer.new($PORT)
@@ -115,7 +121,7 @@ t2 = Thread.new{
               #puts "Deleted from array"
               break
             else
-              data = socketVar.read(1024)
+              data = socketVar.read($DataSize)
               socketVar.write(data)
               socketVar.flush
             end #end for if

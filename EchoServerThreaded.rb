@@ -11,7 +11,12 @@
 require 'socket'
 require 'logger'
 
-$PORT=6000
+puts "What port do you want to listen on?"
+$PORT = gets.to_i
+
+puts "What is your Data size?"
+$DataSize = gets.to_i
+
 #File to use for logfile
 $file = File.open('./logfiles/Threaded.log','w')
 #Initialize logger
@@ -48,7 +53,7 @@ while (connection = server.accept)
     begin
       loop do
        #Read from buffer of size 2048
-        data = conn.read(2048)
+        data = conn.read($DataSize)
               #Write what's in socket to client 
               conn.write(data)
               #Flush it

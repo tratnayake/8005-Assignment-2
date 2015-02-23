@@ -15,6 +15,11 @@ require 'rubygems'
 require 'eventmachine'
 
 require 'logger'
+
+puts "What port do you want to listen on?"
+$PORT = gets.to_i
+
+
 #File to use for logfile
 $file = File.open('./logfiles/Epoll.log','w')
 #Initialize logger
@@ -22,7 +27,7 @@ $logger = Logger.new($file)
 
 #Contact an external server to determine local IP address (purely just to print out)
 host = UDPSocket.open {|s| s.connect("64.233.187.99", 1); s.addr.last}
-port = 9000
+port = $PORT
 
 module EchoServer
   #Coutner for number of clients connected
@@ -70,7 +75,7 @@ end
 
 EM.run {
   #Start server and block with EPOLL
-  EM.start_server host, port, EchoServer
+  EM.start_server host, $PORT, EchoServer
   puts "Listening for clients on #{host}:#{port}"
   $logger.info "Server started"
 }
