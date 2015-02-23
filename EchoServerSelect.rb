@@ -126,19 +126,7 @@ t2 = Thread.new{
    end #end for while
 
 }
-
-
 t1.join
 t2.join
-
-
-puts "End of thread"
-
-
-
-puts "Thread1"
-
-
-
 
  

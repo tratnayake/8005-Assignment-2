@@ -15,6 +15,9 @@ msgcounter = gets.chomp.to_i
 puts "What port are you going to be using"
 port = gets.chomp.to_i
 
+puts "How much data would you like to send?"
+data = gets.chomp.to_i
+
 $i = 0
 counter = 0
 serveraddress = "192.168.0.14"
@@ -33,11 +36,10 @@ while $i < $client
 		timestart = Time.now.to_f
 			msgcounter.times do
 				#Send a string to the server
-				msg = "helloworld"
-				puts msg
+				msg = "a" * data
 				socket.puts msg
-				line = socket.gets
-				puts line + "\n"
+				line = socket.read(data)
+				socket.flush
 			end
 		#End timer
 		timeend = Time.now.to_f
