@@ -112,7 +112,8 @@ server.listen(1000000);
 		  end
 		rescue Errno::ECONNRESET => e
 		#Close the connection
-		puts "DISCONNECT"
+		puts "EOF"
+		puts "Client disconnect"
 		$counter = $counter - 1
 		puts $counter
 		end #endBegin
